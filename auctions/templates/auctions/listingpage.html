@@ -42,7 +42,6 @@
             {% endfor %}
             </ul>
         </div>
-
         <form method = "get" action ="{% url 'allcomments' %}">
         <input required type = "text" placeholder = "Add Comment" name = "comment">
         <button class="btn btn-outline-primary" type = "submit" value = {{ list.id }} name = "listid"> Comment </button>
@@ -130,5 +129,3 @@ img{
 }
 </style>
 {% endblock %}
-
-

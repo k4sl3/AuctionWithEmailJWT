@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import *
+from django import forms
 
 class auction(admin.ModelAdmin):
     list_display = ("id" , "user", "active_bool","title" , "desc" , "starting_bid" , "image_url" , "category")
@@ -15,6 +16,7 @@ class comme(admin.ModelAdmin):
 
 class win(admin.ModelAdmin):
     list_display = ("id","user", "bid_win_list")
+
 
 # Register your models here.
 admin.site.register(auctionlist, auction)

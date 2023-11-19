@@ -1,0 +1,19 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}My Orders{% endblock %}
+
+{% block body %}
+  <h2>My Orders</h2>
+  <ul>
+    {% for order in user_orders %}
+      <li>
+        {{ order.product_name }} - {{ order.address }} - {{ order.name }} - {{ order.email }}
+        {% if order.bid.id|default_if_none:"" != "" %}
+          <a href="{% url 'download_invoice' order.id order.bid.id %}" class="btn btn-primary">Download Details</a>
+        {% else %}
+          <p>No details available</p>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

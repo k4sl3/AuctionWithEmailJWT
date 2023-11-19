@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>User Profile</title>
+</head>
+<body>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="text-center">User Profile</h2>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="username">Username:</label>
+                        <p id="username" class="form-control-static">{{ user.username }}</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <p id="email" class="form-control-static">{{ user.email }}</p>
+                    </div>
+                    <!-- Другая информация о пользователе, которую вы хотите отобразить -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-6">
+            <a href="{% url 'my_orders' %}" class="btn btn-primary float-right">My Orders</a>
+        </div>
+    </div>
+</div>
+
+<!-- Подключение скрипта Bootstrap и jQuery (если нужно) -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

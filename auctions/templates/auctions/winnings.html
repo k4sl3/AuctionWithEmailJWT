@@ -1,60 +1,80 @@
+<!-- ваш_проект/ваше_приложение/templates/auctions/winnings.html -->
 {% extends "auctions/layout.html" %}
 
 {% block body %}
     <h2>Your Winnings</h2>
-    <div id="activelist">
-    {% for list in user_winlist %}
-    <div class = "card">
-        <a class="title">{{list.bid_win_list.title}}</a>
-        <a class= "cat">{{list.bid_win_list.category}}</a>
-        {% if list.bid_win_list.image_url %}
-            <img src="{{ list.bid_win_list.image_url }}" class="list_img">
-        {% else %}
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/No_image_3x4.svg/1024px-No_image_3x4.svg.png" alt="No image Provided" class="list_img">
-        {% endif %}
-        <p class="desc">{{ list.bid_win_list.desc }}</p>
-        <div>This bid was listed by <a class = "listuser">{{ list.bid_win_list.user }}</a>.</div>
-    </div>  
-    {% endfor %}
+    <div id="activelist" class="card-container">
+        {% for list in user_winlist %}
+            <div class="card">
+                <a class="title" href="{% url 'order' bid_id=list.bid_win_list.id %}">{{list.bid_win_list.title}}</a>
+                    {% if list.bid_win_list.image_url %}
+                        <img src="{{ list.bid_win_list.image_url }}" alt="{{ list.bid_win_list.title }}" class="list_img">
+                    {% else %}
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/No_image_3x4.svg/1024px-No_image_3x4.svg.png" alt="No image Provided" class="list_img">
+                    {% endif %}
+                    <div class="card-content">
+                        <a class="title">{{ list.bid_win_list.title }}</a>
+                        <a class="cat">{{ list.bid_win_list.category }}</a>
+                        <p class="desc">{{ list.bid_win_list.desc }}</p>
+                        <div>This bid was listed by <span class="listuser">{{ list.bid_win_list.user }}</span>.</div>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
     </div>
-      
+
 <style>
-        
-#activelist{
+#activelist {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
     margin-top: 4vw;
-    grid-gap: 2vw;
-    display:grid;
-    width: 90%;
-    margin-left: 5%;
-    grid-template-rows: repeat(auto,1fr);
-    grid-template-columns: 1fr 1fr;
-    font-family: 'Nunito', sans-serif;
+}
+
+.card {
+    text-decoration: none;
+    color: inherit;
+    width: 45%;
+    margin-bottom: 2vw;
+    border: 1px solid #ddd; /* Добавлен рамка вокруг карты для лучшей видимости */
+    border-radius: 8px; /* Добавлены скругленные углы */
+    overflow: hidden; /* Исключено переполнение содержимого за пределы карты */
+    transition: transform 0.2s; /* Добавлен плавный переход при наведении */
+}
+
+.card:hover {
+    transform: scale(1.05); /* Немного увеличиваем карту при наведении */
+}
+
+.card img {
+    width: 100%;
+    height: auto; /* Сохраняем соотношение сторон изображения */
+}
+
+.card-content {
+    background-color: #f5f5f5;
+    padding: 1vw;
     text-align: center;
 }
-.card{
-    display: grid;
-    grid-template-rows: repeat(auto,1fr);
-    grid-template-columns: 1fr;
-    width: 90%;
-    margin-left: 5%;
-}
 
-img{
-        width: 100%;
-    }
-
-.title{
-
+.title {
     font-size: 2vw;
     font-weight: bold;
 }
-.listuser{
+
+.cat {
+    display: block;
+    margin-bottom: 0.5vw;
+    font-style: italic;
+}
+
+.desc {
+    margin-top: 0.5vw;
+}
+
+.listuser {
     font-weight: bold;
 }
-button{
-    width: 100%;
-}
+
 </style>
 {% endblock %}
-
-

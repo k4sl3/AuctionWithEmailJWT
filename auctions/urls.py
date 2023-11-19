@@ -1,5 +1,5 @@
 from django.urls import path
-
+from .views import *
 from . import views
 
 urlpatterns = [
@@ -18,5 +18,10 @@ urlpatterns = [
     path("winnings", views.winnings, name="winnings"),
     path("cat_list", views.cat_list, name="cat_list"),
     path("categories/<str:category_name>", views.cat, name="cat"),
+    path("profile", views.profile, name='profile'),
+    path("order/<int:bid_id>/", views.order, name='order'),
+    path('my_orders/', views.my_orders, name='my_orders'),
+    path('download_invoice/<int:orderID>/<int:bidID>/', views.download_invoice_view, name='download_invoice'),
+    path('already_ordered/', already_ordered, name='already_ordered'),
 ]
 
