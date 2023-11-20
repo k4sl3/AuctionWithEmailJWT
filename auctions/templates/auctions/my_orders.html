@@ -6,14 +6,54 @@
   <h2>My Orders</h2>
   <ul>
     {% for order in user_orders %}
-      <li>
-        {{ order.product_name }} - {{ order.address }} - {{ order.name }} - {{ order.email }}
-        {% if order.bid.id|default_if_none:"" != "" %}
-          <a href="{% url 'download_invoice' order.id order.bid.id %}" class="btn btn-primary">Download Details</a>
-        {% else %}
-          <p>No details available</p>
-        {% endif %}
-      </li>
-    {% endfor %}
+  <li>
+    {{ order.product_name }} - {{ order.address }} - {{ order.name }} - {{ order.email }}
+    {% if order.bid %}
+      <button class="btn btn-primary" onclick="downloadInvoice('{{ order.id }}', '{{ order.bid.id }}')">Download Details</button>
+    {% else %}
+      No bid available
+    {% endif %}
+  </li>
+{% endfor %}
+
   </ul>
+
+  <script>
+    function downloadInvoice(orderID, bidID) {
+      console.log('Clicked');
+      console.log('Order ID:', orderID);
+      console.log('Bid ID:', bidID);
+
+      // Make sure orderID is an integer
+      orderID = parseInt(orderID);
+
+      // Check if bidID is a valid number
+      if (isNaN(bidID)) {
+        console.error('Invalid bidID:', bidID);
+        return;
+      }
+
+      bidID = parseInt(bidID);
+
+      var url = '{% url "download_invoice" 0 0 %}'.replace('0', orderID).replace('0', bidID);
+
+      fetch(url)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.blob();
+        })
+        .then(blob => {
+          var url = window.URL.createObjectURL(new Blob([blob]));
+          var a = document.createElement('a');
+          a.href = url;
+          a.download = 'invoice.pdf';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        })
+        .catch(error => console.error('Error:', error));
+    }
+  </script>
 {% endblock %}

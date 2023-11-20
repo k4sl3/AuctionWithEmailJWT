@@ -28,23 +28,26 @@ def render_to_pdf(template_src, context_dict):
         return HttpResponse(result.getvalue(), content_type='application/pdf')
     return HttpResponse("Error rendering PDF", status=400)
 
-@login_required(login_url='/accounts/login/')
+
 def download_invoice_view(request, orderID, bidID):
     try:
+        # Логика получения данных для инвойса
+        print("Order ID:", orderID)
+        print("Bid ID:", bidID)
         order = get_object_or_404(Order, id=orderID)
         bid = get_object_or_404(Bid, id=bidID)
 
         mydict = {
             'orderDate': order.order_date,
-            'customerName': request.user,
+            'username': request.user,
             'customerEmail': order.email,
-            'customerMobile': order.mobile,
             'shipmentAddress': order.address,
-            'orderStatus': order.status,
+            'orderStatus': "Processing",
             'bidAmount': bid.bid_amount,
         }
 
-        return render(request, 'ecom/download_invoice.html', mydict)
+        # Отправка данных в шаблон и рендеринг
+        return render(request, 'auctions/download_invoice.html', mydict)
     except Exception as e:
         # Логгирование ошибки или вывод в консоль для отладки
         print(f"Error in download_invoice_view: {e}")
@@ -61,11 +64,11 @@ def order(request, bid_id):
         address = request.POST.get('address')
         name = request.POST.get('name')
         email = request.POST.get('email')
+        bid_amnt = request.POST.get('bid_amnt')
 
         existing_order = Order.objects.filter(product_name=product_name, user=request.user)
 
         if existing_order.exists():
-            # Если заказ уже существует, перенаправим пользователя на страницу "Уже заказано"
             return redirect('already_ordered')
 
         order = Order.objects.create(
@@ -73,13 +76,24 @@ def order(request, bid_id):
             product_name=product_name,
             address=address,
             name=name,
-            email=email
+            email=email,
         )
+        order.save()
+
+        bid = Bid.objects.create(
+            user=request.user,
+            listing_id=bid_id,  # Change from listingid to listing_id
+            bid_amount=bid_amnt,
+        )
+        bid.save()
 
         return redirect('my_orders')
 
     bid = auctionlist.objects.get(pk=bid_id)
     return render(request, 'auctions/order.html', {'bid_id': bid_id, 'bid': bid})
+
+
+
 
 
 
@@ -149,14 +163,16 @@ def register(request):
         try:
             user = User.objects.create_user(username, email, password)
             user.save()
+            user = authenticate(request, username=username, password=password)
+            login(request, user)
+
+            return HttpResponseRedirect(reverse("logout"))
         except IntegrityError:
             return render(request, "auctions/register.html", {
                 "message": "Username already taken."
             })
-        login(request, user)
-        return HttpResponseRedirect(reverse("login"))
-    else:
-        return render(request, "auctions/register.html")
+
+    return render(request, "auctions/register.html")
 
 
 @login_required(login_url='login')

@@ -18,9 +18,12 @@ class win(admin.ModelAdmin):
     list_display = ("id","user", "bid_win_list")
 
 
+
+
 # Register your models here.
 admin.site.register(auctionlist, auction)
 admin.site.register(bids, bds)
 admin.site.register(comments, comme)
 admin.site.register(watchlist, watchl)
 admin.site.register(winner, win)
+admin.site.register(Bid)
